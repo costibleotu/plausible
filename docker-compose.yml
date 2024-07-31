@@ -1,17 +1,17 @@
 services:
-  plausible_db:
-    # Plausible v2.1.1 was tested against PostgreSQL versions 15 and 16
-    # https://github.com/plausible/analytics/blob/v2.1.1/.github/workflows/elixir.yml#L21-L32
-    image: postgres:16-alpine
-    restart: always
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=postgres
-    healthcheck:
-      test: pg_isready
-      start_interval: 2s
-      start_period: 1m
+  # plausible_db:
+  #   # Plausible v2.1.1 was tested against PostgreSQL versions 15 and 16
+  #   # https://github.com/plausible/analytics/blob/v2.1.1/.github/workflows/elixir.yml#L21-L32
+  #   image: postgres:16-alpine
+  #   restart: always
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+  #   environment:
+  #     - POSTGRES_PASSWORD=postgres
+  #   healthcheck:
+  #     test: pg_isready
+  #     start_interval: 2s
+  #     start_period: 1m
 
   plausible_events_db:
     image: clickhouse/clickhouse-server:24.3.3.102-alpine
@@ -38,15 +38,15 @@ services:
       test: wget --no-verbose --tries=1 --spider http://127.0.0.1:8000 || exit 1
       start_interval: 2s
       start_period: 1m
-    depends_on:
-      plausible_db:
-        condition: service_healthy
+    # depends_on:
+    #   plausible_db:
+    #     condition: service_healthy
       plausible_events_db:
         condition: service_healthy
     ports:
       - 127.0.0.1:8000:8000
     env_file:
-      - plausible-conf.env
+      - .env
 
 volumes:
   db-data:
